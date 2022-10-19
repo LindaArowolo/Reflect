@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block body %}
+  <div class="container-fluid h-100 d-flex flex-column justify-content-center align-items-center">
+    <h1 class="mb-4">Your Day</h1>
+    <form method="post">
+      <div class="mb-4">
+        <p class="lead">How was your mood today?</p>
+        <input type="radio" class="btn-check" name="mood" id="mood-very-bad" value="1" autocomplete="off" required>
+        <label class="btn btn-lg btn-outline-info" for="mood-very-bad" style="font-size: 4rem; border-width: 2px;"><i class="fa-solid fa-face-sad-tear"></i></label>
+        <input type="radio" class="btn-check" name="mood" id="mood-bad" value="2" autocomplete="off" required>
+        <label class="btn btn-lg btn-outline-danger" for="mood-bad" style="font-size: 4rem; border-width: 2px;"><i class="fa-solid fa-face-frown"></i></label>
+        <input type="radio" class="btn-check" name="mood" id="mood-neutral" value="3" autocomplete="off" required>
+        <label class="btn btn-lg btn-outline-secondary" for="mood-neutral" style="font-size: 4rem; border-width: 2px;"><i class="fa-solid fa-face-meh"></i></label>
+        <input type="radio" class="btn-check" name="mood" id="mood-good" value="4" autocomplete="off" required>
+        <label class="btn btn-lg btn-outline-primary" for="mood-good" style="font-size: 4rem; border-width: 2px;"><i class="fa-solid fa-face-smile"></i></label>
+        <input type="radio" class="btn-check" name="mood" id="mood-very-good" value="5" autocomplete="off" required>
+        <label class="btn btn-lg btn-outline-success" for="mood-very-good" style="font-size: 4rem; border-width: 2px;"><i class="fa-solid fa-face-laugh"></i></label>
+      </div>
+      <div class="mb-4">
+        <p class="lead">How was your sleep quality last night?</p>
+        <input type="radio" class="btn-check" name="sleep" id="sleep-very-bad" value="1" autocomplete="off" required>
+        <label class="btn btn-lg btn-outline-info" for="sleep-very-bad" style="font-size: 4rem; border-width: 2px;"><i class="fa-solid fa-face-sad-tear"></i></label>
+        <input type="radio" class="btn-check" name="sleep" id="sleep-bad" value="2" autocomplete="off" required>
+        <label class="btn btn-lg btn-outline-danger" for="sleep-bad" style="font-size: 4rem; border-width: 2px;"><i class="fa-solid fa-face-frown"></i></label>
+        <input type="radio" class="btn-check" name="sleep" id="sleep-neutral" value="3" autocomplete="off" required>
+        <label class="btn btn-lg btn-outline-secondary" for="sleep-neutral" style="font-size: 4rem; border-width: 2px;"><i class="fa-solid fa-face-meh"></i></label>
+        <input type="radio" class="btn-check" name="sleep" id="sleep-good" value="4" autocomplete="off" required>
+        <label class="btn btn-lg btn-outline-primary" for="sleep-good" style="font-size: 4rem; border-width: 2px;"><i class="fa-solid fa-face-smile"></i></label>
+        <input type="radio" class="btn-check" name="sleep" id="sleep-very-good" value="5" autocomplete="off" required>
+        <label class="btn btn-lg btn-outline-success" for="sleep-very-good" style="font-size: 4rem; border-width: 2px;"><i class="fa-solid fa-face-laugh"></i></label>
+      </div>
+      <div class="mb-4">
+        <p class="lead">How were your motivation levels today?</p>
+        <input type="radio" class="btn-check" name="motivation" id="motivation-very-bad" value="1" autocomplete="off" required>
+        <label class="btn btn-lg btn-outline-info" for="motivation-very-bad" style="font-size: 4rem; border-width: 2px;"><i class="fa-solid fa-face-sad-tear"></i></label>
+        <input type="radio" class="btn-check" name="motivation" id="motivation-bad" value="2" autocomplete="off" required>
+        <label class="btn btn-lg btn-outline-danger" for="motivation-bad" style="font-size: 4rem; border-width: 2px;"><i class="fa-solid fa-face-frown"></i></label>
+        <input type="radio" class="btn-check" name="motivation" id="motivation-neutral" value="3" autocomplete="off" required>
+        <label class="btn btn-lg btn-outline-secondary" for="motivation-neutral" style="font-size: 4rem; border-width: 2px;"><i class="fa-solid fa-face-meh"></i></label>
+        <input type="radio" class="btn-check" name="motivation" id="motivation-good" value="4" autocomplete="off" required>
+        <label class="btn btn-lg btn-outline-primary" for="motivation-good" style="font-size: 4rem; border-width: 2px;"><i class="fa-solid fa-face-smile"></i></label>
+        <input type="radio" class="btn-check" name="motivation" id="motivation-very-good" value="5" autocomplete="off" required>
+        <label class="btn btn-lg btn-outline-success" for="motivation-very-good" style="font-size: 4rem; border-width: 2px;"><i class="fa-solid fa-face-laugh"></i></label>
+      </div>
+      <div class="mb-4">
+        <label class="lead mb-3" for="reflection">
+          Do you have any reflections on your day? <button type="button" id="inspire-me" class="btn btn-sm btn-secondary ms-2">Inspire me</button><br>
+          <small id="inspiration" class="text-muted" style="position: relative; top: -5px;"></small>
+        </label>
+        <textarea class="form-control" name="reflection" id="reflection" rows="4" required></textarea>
+      </div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-lg btn-secondary">Submit reflections</button>
+      </div>
+    </form>
+  </div>
+  <script>
+    const inspireMeButton = document.getElementById("inspire-me")
+    const inspirationContainer = document.getElementById("inspiration")
+
+    const inspirations = [
+      "What were you proud of today?",
+      "Did anything surprise you today?",
+      "What were you grateful for today?",
+      "Did you set any goals today?",
+      "Did you meet any goals today?",
+      "Did you have any interactions today?",
+    ].map(inspiration => ({ inspiration, sortingKey: Math.random() }))
+     .sort((a, b) => a.sortingKey - b.sortingKey)
+     .map(({ inspiration }) => inspiration)
+
+    let counter = 0
+
+    inspireMeButton.addEventListener("click", function() {
+      const randomInspiration = inspirations[counter]
+      inspirationContainer.textContent = randomInspiration
+      counter = (counter + 1) % inspirations.length
+    })
+  </script>
+{% endblock %}
