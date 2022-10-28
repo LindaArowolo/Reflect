@@ -1,5 +1,4 @@
-CREATE DATABASE reflect;
-USE reflect;
+Use reflect;
 
 CREATE TABLE users (
   id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -9,7 +8,6 @@ CREATE TABLE users (
   hashed_password BLOB
 );
 
-
 CREATE TABLE tracker (
     tracker_id	INT	PRIMARY KEY AUTO_INCREMENT,
     id		INT,
@@ -17,7 +15,7 @@ CREATE TABLE tracker (
     mood		INT,
     sleep		INT,
     motivation	INT,
-    journal		TEXT,
+    reflection		TEXT,
 
     CHECK (mood BETWEEN 1 AND 5),
     CHECK (sleep BETWEEN 1 AND 5),

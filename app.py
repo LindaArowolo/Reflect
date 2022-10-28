@@ -4,9 +4,14 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, curren
 from config import SECRET_KEY
 
 from Reflect.database.users import add_user, email_available, get_user_with_credentials, get_user_by_id
+from datetime import date
+from database.connection import get_db_connection
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
+
+engine = get_db_connection()
+cursor = engine.cursor(dictionary=True)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -108,13 +113,30 @@ def view_tracker():
 
 @app.post("/today")
 @login_required
-def submit_tracker():
+def submit_tracker():  # can we create a class similar to this for the  - use this as the parent class
+    id = current_user.id
+    print(id)
+    today = date.today()
+    # text year-month-date
+    todays_date = today.strftime("%Y-%m-%d")
     mood = request.form.get("mood")
     sleep = request.form.get("sleep")
     motivation = request.form.get("motivation")
     reflection = request.form.get("reflection")
-    print(f"Values for current user:\nMood: {mood}, sleep: {sleep}, motivation: {motivation}, reflection: {reflection}")
-    return redirect("/")
+    print(f"Values for current user:\nID: {id}, Date: {todays_date}, Mood: {mood}, sleep: {sleep}, motivation: {motivation}, reflection: {reflection}")
+    cursor.execute("""
+    INSERT INTO tracker(id, date, mood, sleep, motivation, reflection)
+    VALUES(%s, "%s", %s, %s, %s, "%s");
+    """ % (id, todays_date, mood, sleep, motivation, reflection))
+    engine.commit()
+    cursor.close()
+    if engine:
+        engine.close()
+    return redirect("/"),200
+
+
+def submit_scrapbook():
+    pass
 
 
 if __name__ == '__main__':
