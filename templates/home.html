@@ -1,11 +1,47 @@
 {% extends 'base.html' %}
 {% block title %}Home{% endblock %}
 {% block body %}
-  <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
-    <h1>Welcome to the app.</h1>
-    <div>
-      <a role="button" href="/login" class="btn btn-dark">Log in</a>
-      <a role="button" href="/signup" class="btn btn-outline-dark">Sign up</a>
+  <style>
+    .card {
+      width: 300px;
+    }
+    @media (min-width: 576px) {
+      .card {
+        width: 550px;
+      }
+    }
+  </style>
+  <div class="container-fluid d-flex flex-column justify-content-center align-items-center" style="min-height: 100%;">
+    <div class="card mx-auto my-5 text-center mw-100" style="background: #fffa;">
+      <div class="card-body">
+        <h1 class="text-primary mb-0" style="font-size: 3rem;">Welcome to Reflect.</h1>
+        {% if user.is_anonymous %}
+          <img src="/static/logo.png" class="img-fluid">
+          <div>
+            <a role="button" href="/login" class="btn btn-primary">Log in</a>
+            <a role="button" href="/signup" class="btn btn-outline-primary">Sign up</a>
+          </div>
+        {% else %}
+          <div class="row g-3 mt-4">
+            <div class="col-sm-6 d-flex justify-content-sm-end justify-content-center">
+              <a role="button" href="/today" class="btn btn-danger d-inline-flex flex-column justify-content-center align-items-center {{ 'disabled' if entry_exists_for_today else '' }}"
+                 style="width: 250px; height: 250px; font-size: 2rem; line-height: 1;"><i class="fa-solid fa-calendar-day display-1"></i><br>my day</a>
+            </div>
+            <div class="col-sm-6 d-flex justify-content-sm-start justify-content-center">
+              <a role="button" href="/month" class="btn btn-warning d-inline-flex flex-column justify-content-center align-items-center"
+                 style="width: 250px; height: 250px; font-size: 2rem; line-height: 1;"><i class="fa-solid fa-chart-simple display-1"></i><br>my month</a>
+            </div>
+            <div class="col-sm-6 d-flex justify-content-sm-end justify-content-center">
+              <a role="button" href="/activities" class="btn btn-primary d-inline-flex flex-column justify-content-center align-items-center"
+                 style="width: 250px; height: 250px; font-size: 2rem; line-height: 1;"><i class="fa-solid fa-masks-theater display-1"></i><br>my activities</a>
+            </div>
+            <div class="col-sm-6 d-flex justify-content-sm-start justify-content-center">
+              <a role="button" href="/scrapbook" class="btn btn-secondary d-inline-flex flex-column justify-content-center align-items-center"
+                 style="width: 250px; height: 250px; font-size: 2rem; line-height: 1;"><i class="fa-solid fa-palette display-1"></i><br>my scrapbook</a>
+            </div>
+          </div>
+        {% endif %}
+      </div>
     </div>
   </div>
 {% endblock %}

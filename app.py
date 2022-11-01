@@ -1,17 +1,16 @@
 from flask import Flask, flash, request, render_template, redirect
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
+from datetime import date
 
 from config import SECRET_KEY
 
-from Reflect.database.users import add_user, email_available, get_user_with_credentials, get_user_by_id
-from datetime import date
-from database.connection import get_db_connection
+from database.users import add_user, email_available, get_user_with_credentials, get_user_by_id
+from database.tracker import add_entry, entry_exists, get_averages
+
+from scrapbook import allowed_file, upload_file
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
-
-engine = get_db_connection()
-cursor = engine.cursor(dictionary=True)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -40,20 +39,21 @@ def user_loader(user_id):
 
 @app.get('/')
 def view_home():
-    return render_template("home.html")
+    entry_exists_for_today = current_user.is_authenticated and entry_exists(current_user.id, date.today())
+    return render_template("home.html", user=current_user, entry_exists_for_today=entry_exists_for_today)
 
 
 @app.get('/login')
 def view_login():
     if not current_user.is_anonymous:
-        return redirect('/profile')
+        return redirect('/')
     return render_template("login.html")
 
 
 @app.post('/login')
 def submit_login():
     if not current_user.is_anonymous:
-        return redirect('/profile')
+        return redirect('/')
     email = request.form.get('email')
     password = request.form.get('password')
     user = get_user_with_credentials(email, password)
@@ -62,21 +62,21 @@ def submit_login():
     else:
         user = User(user)
         login_user(user)
-        return redirect('/profile')
+        return redirect('/')
     return redirect('/login')
 
 
 @app.get('/signup')
 def view_signup():
     if not current_user.is_anonymous:
-        return redirect('/profile')
+        return redirect('/')
     return render_template("signup.html")
 
 
 @app.post('/signup')
 def submit_signup():
     if not current_user.is_anonymous:
-        return redirect('/profile')
+        return redirect('/')
     name = request.form.get('name')
     email = request.form.get('email')
     region = request.form.get('region')
@@ -96,13 +96,7 @@ def submit_signup():
 @login_required
 def submit_logout():
     logout_user()
-    return redirect('/login')
-
-
-@app.get('/profile')
-@login_required
-def view_profile():
-    return render_template("profile.html", user=current_user)
+    return redirect('/')
 
 
 @app.get("/today")
@@ -114,29 +108,46 @@ def view_tracker():
 @app.post("/today")
 @login_required
 def submit_tracker():  # can we create a class similar to this for the  - use this as the parent class
-    id = current_user.id
-    print(id)
-    today = date.today()
-    # text year-month-date
-    todays_date = today.strftime("%Y-%m-%d")
     mood = request.form.get("mood")
     sleep = request.form.get("sleep")
     motivation = request.form.get("motivation")
     reflection = request.form.get("reflection")
-    print(f"Values for current user:\nID: {id}, Date: {todays_date}, Mood: {mood}, sleep: {sleep}, motivation: {motivation}, reflection: {reflection}")
-    cursor.execute("""
-    INSERT INTO tracker(id, date, mood, sleep, motivation, reflection)
-    VALUES(%s, "%s", %s, %s, %s, "%s");
-    """ % (id, todays_date, mood, sleep, motivation, reflection))
-    engine.commit()
-    cursor.close()
-    if engine:
-        engine.close()
-    return redirect("/"),200
+    if mood and sleep and motivation and reflection:
+        add_entry(current_user.id, date.today(), mood, sleep, motivation, reflection)
+        return redirect('/thanks')
+    else:
+        flash("Please don't leave fields blank.")
+        return redirect('/today')
 
 
+@app.get('/thanks')
+@login_required
+def view_tracker_thanks():
+    return render_template("thanks.html", user=current_user)
+
+
+@app.get('/month')
+@login_required
+def view_monthly_tracker():
+    averages = get_averages(current_user.id)
+    print(averages)
+    return 5
+
+
+@app.route("/scrapbook")
+@login_required
+def scrapbook():
+    return render_template("scrapbook.html", user=current_user)
+
+
+@app.post("/scrapbook_entry")
+@login_required
 def submit_scrapbook():
-    pass
+    image_url = request.form.get("image_url")
+    valid_image = allowed_file(image_url)
+    videos = request.form.get("videos")
+    valid_video = allowed_file(videos)
+    text = request.form.get("text")
 
 
 if __name__ == '__main__':
