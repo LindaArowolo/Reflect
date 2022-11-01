@@ -1,4 +1,5 @@
-Use reflect;
+CREATE DATABASE reflect;
+USE reflect;
 
 CREATE TABLE users (
   id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -9,18 +10,19 @@ CREATE TABLE users (
 );
 
 CREATE TABLE tracker (
-    tracker_id	INT	PRIMARY KEY AUTO_INCREMENT,
-    id		INT,
+    id	        INT	PRIMARY KEY AUTO_INCREMENT,
+    user_id		INT,
     date		DATE,
     mood		INT,
     sleep		INT,
     motivation	INT,
-    reflection		TEXT,
+    reflection	TEXT,
 
+    UNIQUE (user_id, date),
     CHECK (mood BETWEEN 1 AND 5),
     CHECK (sleep BETWEEN 1 AND 5),
     CHECK (motivation BETWEEN 1 AND 5),
-    FOREIGN KEY (id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 CREATE TABLE activity (

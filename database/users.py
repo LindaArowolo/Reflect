@@ -1,5 +1,5 @@
 import bcrypt
-from Reflect.database.connection import get_db_connection
+from database.connection import get_db_connection
 
 
 def add_user(name, email, region, password):
