@@ -25,18 +25,10 @@ CREATE TABLE tracker (
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE activity (
-    id	int	PRIMARY KEY AUTO_INCREMENT,
-    fitness INT,
-    relaxation varchar(255)
-);
-
-
-CREATE TABLE scrapbook(
+CREATE TABLE scrapbook (
     id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
     image_url VARCHAR(255),
-    videos	VARCHAR(255),
-    voicenotes VARCHAR(255),
-    doodles VARCHAR(255),
-    text	text
+
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );

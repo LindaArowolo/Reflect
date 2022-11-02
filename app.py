@@ -2,19 +2,26 @@ from flask import Flask, flash, request, render_template, redirect
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
 from random import randint
 from datetime import date
+from os import mkdir
+from os.path import join, dirname, realpath, exists
 
 from config import SECRET_KEY
 
 from database.users import add_user, email_available, get_user_with_credentials, get_user_by_id
 from database.tracker import add_entry, entry_exists, get_averages
+from database.scrapbook import add_image, get_images
+
+from utils.files import get_file_extension, is_valid_image_file
 
 from mock_activity_api import mock_data
 from quotes_api import data
 
-# from scrapbook import allowed_file, upload_file
-
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
+app.config['UPLOAD_FOLDER'] = join(dirname(realpath(__file__)), 'static/uploads')
+
+if not exists(app.config['UPLOAD_FOLDER']):
+    mkdir(app.config['UPLOAD_FOLDER'])
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -120,7 +127,7 @@ def submit_tracker():  # can we create a class similar to this for the  - use th
         add_entry(current_user.id, date.today(), mood, sleep, motivation, reflection)
         return redirect('/thanks')
     else:
-        flash("Please don't leave fields blank.")
+        flash("Please don't leave fields blank.", 'error')
         return redirect('/today')
 
 
@@ -138,28 +145,9 @@ def view_monthly_tracker():
     return 5
 
 
-@app.route("/scrapbook")
-@login_required
-def scrapbook():
-    return render_template("scrapbook.html", user=current_user)
-
-
-@app.post("/scrapbook_entry")
-@login_required
-def submit_scrapbook():
-    
-    image_url = request.form.get("image_url")
-    for filename, file in request.files:
-        # name = request.FILES[filename].name
-        print(filename, file)
-    # valid_image = allowed_file(image_url)
-    # upload_file(valid_image)
-    return "Upload successful"
-
-
 @app.get('/activity')
 @login_required
-def generate_activity():
+def view_activity():
     index = randint(0, len(mock_data) - 1)
     value = mock_data[index]
     return render_template("activity.html", data=value)
@@ -167,10 +155,40 @@ def generate_activity():
 
 @app.get('/quote')
 @login_required
-def get_quote():
+def view_quote():
     integer = randint(0, 33)
     quote_obj = data[integer]
     return render_template("quotes.html", id=quote_obj["id"], author=quote_obj["person"], quote=quote_obj["quote"])
+
+
+@app.get("/scrapbook")
+@login_required
+def view_scrapbook():
+    images = get_images(current_user.id)
+    return render_template("scrapbook.html", user=current_user, images=images)
+
+
+@app.get("/scrapbook/upload")
+@login_required
+def view_scrapbook_upload():
+    return render_template("scrapbook-upload.html", user=current_user)
+
+
+@app.post("/scrapbook/upload")
+@login_required
+def submit_scrapbook_upload():
+    file = request.files.get('file')
+    if not file or not file.filename:
+        flash('Please select a file', 'error')
+    elif not is_valid_image_file(file.filename):
+        flash('Please only select .png, .jpg, .jpeg or .gif files', 'error')
+    else:
+        filename = f"{current_user.id}-{randint(10000000, 99999999)}.{get_file_extension(file.filename)}"
+        file.save(join(app.config['UPLOAD_FOLDER'], filename))
+        add_image(current_user.id, filename)
+        flash('Your file has been uploaded', 'info')
+        return redirect('/scrapbook')
+    return redirect('/scrapbook/upload')
 
 
 if __name__ == '__main__':
