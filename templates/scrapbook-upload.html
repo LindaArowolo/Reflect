@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block body %}
+  <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
+    <div class="card mx-auto text-center" style="width: 550px; max-width: 95%; background: #fffa;">
+      <div class="card-body">
+        <h1 class="text-primary mb-4">Add to your scrapbook</h1>
+        <form action="/scrapbook/upload" method="post" enctype="multipart/form-data">
+          <div class="mb-4">
+            <label for="file" class="form-label text-primary">Your image</label>
+            <input type="file" class="form-control" id="file" name="file" required>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Upload</button>
+          <a role="button" href="/scrapbook" class="btn btn-danger w-100 mt-2">Cancel</a>
+          {% with error_messages = get_flashed_messages(category_filter=['error']) %}
+            {% if error_messages %}
+              <p class="text-danger mt-3">{{ error_messages|join(' • ') }}</p>
+            {% endif %}
+          {% endwith %}
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

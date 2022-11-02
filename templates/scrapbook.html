@@ -2,27 +2,26 @@
 {% block title %}Home{% endblock %}
 {% block body %}
   <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
-    <h1 class="text-center">Scrapbook!</h1>
-    <form action="/scrapbook_entry" method="post">
-      <div class="mb-3">
-        <label for="image_url" class="form-label">Picture</label>
-        <input type="file" class="form-control" id="image_url" name="image_url">
+    <div class="card mx-auto text-center" style="background: #fffa;">
+      <div class="card-body">
+        <h1 class="text-primary mb-4">{{ user.name }}'s scrapbook!</h1>
+        {% with info_messages = get_flashed_messages(category_filter=['info']) %}
+          {% if info_messages %}
+            <p class="text-success my-4">{{ info_messages|join(' • ') }}</p>
+          {% endif %}
+        {% endwith %}
+        <div class="mx-auto mb-4" style="max-width: 550px;">
+          <a role="button" href="/scrapbook/upload" class="btn btn-primary w-100">Upload an image</a>
+          <a role="button" href="/" class="btn btn-danger w-100 mt-2">Back to home</a>
+        </div>
+        <div class="row justify-content-center g-4">
+          {% for image in images %}
+            <div class="col-md-6 col-lg-4">
+              <img src="/static/uploads/{{ image.image_url }}" alt="Scrapbook image" class="w-100" style="aspect-ratio: 1/1; object-fit: cover;">
+            </div>
+          {% endfor %}
+        </div>
       </div>
-      <div class="mb-3">
-        <label for="videos" class="form-label">Video</label>
-        <input type="file" class="form-control" id="videos" name="videos">
-      </div>
-      <div class="mb-3">
-        <label for="voicenotes" class="form-label">Voicenote</label>
-        <input type="file" class="form-control" id="voicenotes" name="voicenotes">
-      </div>
-      <div class="mb-3">
-        <label for="text" class="form-label">Text</label>
-        <textarea class="form-control" name="text" id="text" rows="4"></textarea>
-      </div>
-      <div class="text-center">
-        <button type="submit" class="btn btn-lg btn-secondary">Submit Scrapbook</button>
-      </div>
-    </form>
+    </div>
   </div>
 {% endblock %}
