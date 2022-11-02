@@ -1,0 +1,27 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Quotes</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--  <h1>Quotes with ID {{ id }} and author {{ author }} is displayed below</h1>-->
+
+<!--  <p>{{ quote }}</p>-->
+<!--</body>-->
+<!--</html>-->
+
+{% extends 'base.html' %}
+{% block title %}Quote{% endblock %}
+{% block body %}
+  <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
+    <div class="card mx-auto text-center" style="width: 550px; max-width: 95%; background: #fffa;">
+      <div class="card-body">
+        <h1 class="text-primary mb-4">{{ quote }}</h1>
+        <div class="text-center">
+          <a role="button" href="/" class="btn btn-danger w-100 mt-2">Back to home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
