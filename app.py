@@ -7,7 +7,15 @@ from config import SECRET_KEY
 from database.users import add_user, email_available, get_user_with_credentials, get_user_by_id
 from database.tracker import add_entry, entry_exists, get_averages
 
-from scrapbook import allowed_file, upload_file
+import random
+
+from mock_activity_api import mock_data
+
+from quotes_api import data, raw_api
+
+from pprint import pprint
+
+# from scrapbook import allowed_file, upload_file
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
@@ -134,20 +142,37 @@ def view_monthly_tracker():
     return 5
 
 
-@app.route("/scrapbook")
-@login_required
-def scrapbook():
-    return render_template("scrapbook.html", user=current_user)
+# @app.route("/scrapbook")
+# @login_required
+# def scrapbook():
+#     return render_template("scrapbook.html", user=current_user)
+#
+#
+# @app.post("/scrapbook_entry")
+# @login_required
+# def submit_scrapbook():
+#     image_url = request.form.get("image_url")
+#     for filename, file in request.files:
+#         # name = request.FILES[filename].name
+#         print(filename, file)
+#     # valid_image = allowed_file(image_url)
+#     # upload_file(valid_image)
 
 
-@app.post("/scrapbook_entry")
+@app.get('/activity')
 @login_required
-def submit_scrapbook():
-    image_url = request.form.get("image_url")
-    valid_image = allowed_file(image_url)
-    videos = request.form.get("videos")
-    valid_video = allowed_file(videos)
-    text = request.form.get("text")
+def generate_activity():
+    index = random.randint(0, len(mock_data) - 1)
+    value = mock_data[index]
+    return render_template("activity.html", data=value)
+
+
+@app.get('/quote')
+@login_required
+def get_quote():
+    integer = random.randint(0, 33)
+    quote_obj = data[integer]
+    return render_template("quotes.html", id=quote_obj["id"], author=quote_obj["person"], quote=quote_obj["quote"])
 
 
 if __name__ == '__main__':
