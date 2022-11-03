@@ -2,7 +2,8 @@ REFLECT
 
 Reflect with Reflect!
 
-This website helps you track your overall wellbeing by tracking your daily mood, quality of sleep, motivation level, and prompting you with a question about your daily thoughts and habits. Reflect was created with our users in mind—to aid them on their journey with their mental and emotional wellbeing. Along with a tracker, we also have a scrapbook section, which provides our users with an outlet to get all their thoughts out, whether this be via typing or uploading voice notes, videos or photos.
+This website helps you track your overall wellbeing by tracking your daily mood, quality of sleep, motivation level, and prompting you with a question about your daily thoughts and habits. Reflect was created with our users in mind—to aid them on their journey with their mental and emotional wellbeing. Along with a tracker, we also have a scrapbook section, which provides our users with an outlet to get all their thoughts out through uploading photos or text.
+
 Our reflect software allows our users to reflect on their state of being, how they are living and if it is in alignment with their life intentions. You will Reflect with REFLECT.
 
 
