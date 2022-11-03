@@ -25,7 +25,7 @@ pip install requests
 
 pip install bcrypt
 
-pip install 
+pip install flask_login
 
 Once you have followed these steps, run the program from your python IDE. Click the link that appears in the terminal. This will display the login screen for the web app.
 
