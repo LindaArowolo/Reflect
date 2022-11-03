@@ -141,8 +141,8 @@ def view_tracker_thanks():
 @login_required
 def view_monthly_tracker():
     averages = get_averages(current_user.id)
-    print(averages)
-    return 5
+    # print(averages)
+    return render_template("monthly-averages.html", data=averages)  # this needs work - not sure why its not working
 
 
 @app.get('/activity')
