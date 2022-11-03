@@ -23,6 +23,10 @@ pip install mysql-connector-python
 
 pip install requests
 
+pip install bcrypt
+
+pip install 
+
 Once you have followed these steps, run the program from your python IDE. Click the link that appears in the terminal. This will display the login screen for the web app.
 
 Navigation
