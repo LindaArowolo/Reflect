@@ -13,8 +13,8 @@ from database.scrapbook import add_image, get_images
 
 from utils.files import get_file_extension, is_valid_image_file
 
-from mock_activity_api import mock_data
-from quotes_api import data
+from api.mock_activity_api import mock_data
+from api.quotes_api import data
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
@@ -51,7 +51,9 @@ def user_loader(user_id):
 @app.get('/')
 def view_home():
     entry_exists_for_today = current_user.is_authenticated and entry_exists(current_user.id, date.today())
-    return render_template("home.html", user=current_user, entry_exists_for_today=entry_exists_for_today)
+    integer = randint(0, 33)
+    quote_obj = data[integer]
+    return render_template("home.html", user=current_user, entry_exists_for_today=entry_exists_for_today, author=quote_obj["person"], quote=quote_obj["quote"])
 
 
 @app.get('/login')
