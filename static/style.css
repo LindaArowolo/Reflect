@@ -25,3 +25,22 @@
   --bs-btn-hover-color: white;
   --bs-btn-active-color: white;
 }
+
+input[type="range"] {
+    height: 1rem;
+    background: linear-gradient(to right, var(--bs-info), var(--bs-danger), var(--bs-primary), var(--bs-secondary), var(--bs-success));
+    appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 1.5rem;
+  height: 2.5rem;
+  background-color: white;
+  box-shadow: 1px 1px 5px black;
+}
+
+
+.quote {
+  font-family: Kalam;
+}

@@ -10,12 +10,6 @@
         width: 550px;
       }
     }
-    .quote {
-      font-family: Luminari;
-      font-style: Italic;
-
-    }
-
   </style>
   <div class="container-fluid d-flex flex-column justify-content-center align-items-center" style="min-height: 100%;">
     <div class="card mx-auto my-5 text-center mw-100" style="background: #fffa;">
@@ -31,7 +25,7 @@
           <div class="row g-3 mt-3">
             <p class="lead text-info quote my-0">"{{ quote }}"</p>
             <div class="col-sm-6 d-flex justify-content-sm-end justify-content-center">
-              <a role="button" href="/today" class="btn btn-danger d-inline-flex flex-column justify-content-center align-items-center {{ 'disabled' if entry_exists_for_today else '' }}"
+              <a role="button" href="/today" class="btn btn-danger d-inline-flex flex-column justify-content-center align-items-center"
                  style="width: 250px; height: 250px; font-size: 2rem; line-height: 1;"><i class="fa-solid fa-calendar-day display-1"></i><br>my day</a>
             </div>
             <div class="col-sm-6 d-flex justify-content-sm-start justify-content-center">
@@ -47,7 +41,7 @@
                  style="width: 250px; height: 250px; font-size: 2rem; line-height: 1;"><i class="fa-solid fa-palette display-1"></i><br>my scrapbook</a>
             </div>
             <form action="/logout" method="post">
-              <button type="submit" class="btn btn-primary">Logout</button>
+              <button type="submit" class="btn btn-primary mt-2">Logout</button>
             </form>
           </div>
         {% endif %}

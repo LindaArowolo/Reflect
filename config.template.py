@@ -6,3 +6,6 @@ HOST = 'localhost'
 DATABASE = 'reflect'
 USER = 'admin'
 PASSWORD = 'admin'
+
+# Photo API key
+PEXELS_API_KEY = 'pexels-api-key'

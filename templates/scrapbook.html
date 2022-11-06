@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Reflect. My Scrapbook{% endblock %}
 {% block body %}
-  <div class="container d-flex flex-column justify-content-center align-items-center" style="min-height: 100%;">
+  <div class="container d-flex flex-column justify-content-center align-items-center" style="min-height: 100%; max-width: 960px;">
     <div class="card mx-auto text-center" style="background: #fffa;">
       <div class="card-body">
         <h1 class="text-primary mb-4">{{ user.name }}'s scrapbook!</h1>
@@ -10,17 +10,24 @@
             <p class="text-success my-4">{{ info_messages|join(' • ') }}</p>
           {% endif %}
         {% endwith %}
-        <div class="mx-auto mb-4" style="max-width: 550px;">
+        <div class="mx-auto mb-4" style="max-width: 250px;">
           <a role="button" href="/scrapbook/upload" class="btn btn-primary w-100">Upload an image</a>
           <a role="button" href="/" class="btn btn-danger w-100 mt-2">Back to home</a>
         </div>
-        <div class="row justify-content-center g-4">
-          {% for image in images %}
-            <div class="col-md-6 col-lg-4">
-              <img src="/static/uploads/{{ image.image_url }}" alt="Scrapbook image" class="w-100" style="aspect-ratio: 1/1; object-fit: cover;">
-            </div>
-          {% endfor %}
-        </div>
+        {% if images|length == 0 %}
+          <p class="lead text-primary fw-normal mb-0">No uploads yet</p>
+        {% else %}
+          <div class="d-flex flex-wrap justify-content-center">
+            {% for image in images %}
+              <div class="m-2" style="position: relative;">
+                <img src="/static/uploads/{{ image.image_url }}" alt="Scrapbook image" style="width: 250px; height: 250px; object-fit: cover;">
+                <form method="post" action="/scrapbook/delete/{{ image.image_url }}" class="bg-dark" style="position: absolute; top: 0; right: 0; border-bottom-left-radius: 0.5rem;">
+                  <button type="submit" class="btn-close btn-close-white p-2" aria-label="Close"></button>
+                </form>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>
