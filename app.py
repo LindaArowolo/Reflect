@@ -1,24 +1,29 @@
 from flask import Flask, flash, request, render_template, redirect
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
-from random import randint
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
+from werkzeug.utils import secure_filename
+import requests
 from datetime import date
-from os import mkdir
+from random import randint
+from os import mkdir, remove
 from os.path import join, dirname, realpath, exists
 
 from config import SECRET_KEY
 
 from database.users import add_user, email_available, get_user_with_credentials, get_user_by_id
-from database.tracker import add_entry, entry_exists, get_averages
-from database.scrapbook import add_image, get_images
+from database.tracker import add_or_update_entry, get_entry, get_averages
+from database.scrapbook import add_image, get_images, remove_image
 
 from utils.files import get_file_extension, is_valid_image_file
 
-from mock_activity_api import mock_data
-from quotes_api import data
+from api.mock_activity_api import create_activity_api
+from api.quotes_api import QuoteGenerator
+from api.photos_api import PhotoGenerator
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
 app.config['UPLOAD_FOLDER'] = join(dirname(realpath(__file__)), 'static/uploads')
+app.config['PORT'] = 5000
 
 if not exists(app.config['UPLOAD_FOLDER']):
     mkdir(app.config['UPLOAD_FOLDER'])
@@ -28,6 +33,10 @@ login_manager.init_app(app)
 login_manager.login_view = '/login'
 login_manager.login_message = 'Please log in to view this page.'
 login_manager.login_message_category = 'error'
+
+activity_api = create_activity_api()
+quote_generator = QuoteGenerator()
+photo_generator = PhotoGenerator()
 
 
 class User(UserMixin):
@@ -50,8 +59,8 @@ def user_loader(user_id):
 
 @app.get('/')
 def view_home():
-    entry_exists_for_today = current_user.is_authenticated and entry_exists(current_user.id, date.today())
-    return render_template("home.html", user=current_user, entry_exists_for_today=entry_exists_for_today)
+    quote = quote_generator.get_random_quote()
+    return render_template("home.html", user=current_user, quote=quote)
 
 
 @app.get('/login')
@@ -113,18 +122,24 @@ def submit_logout():
 @app.get("/today")
 @login_required
 def view_tracker():
-    return render_template("daily-tracker.html", user=current_user)
+    existing_entry = get_entry(current_user.id, date.today())
+    existing_mood = existing_entry['mood'] if existing_entry else 0
+    existing_sleep = existing_entry['sleep'] if existing_entry else 0
+    existing_motivation = existing_entry['motivation'] if existing_entry else 0
+    existing_reflection = existing_entry['reflection'] if existing_entry else ''
+    return render_template("daily-tracker.html", user=current_user, existing_mood=existing_mood,
+                           existing_sleep=existing_sleep, existing_motivation=existing_motivation, existing_reflection=existing_reflection)
 
 
 @app.post("/today")
 @login_required
-def submit_tracker():  # can we create a class similar to this for the  - use this as the parent class
+def submit_tracker():
     mood = request.form.get("mood")
     sleep = request.form.get("sleep")
     motivation = request.form.get("motivation")
     reflection = request.form.get("reflection")
     if mood and sleep and motivation and reflection:
-        add_entry(current_user.id, date.today(), mood, sleep, motivation, reflection)
+        add_or_update_entry(current_user.id, date.today(), mood, sleep, motivation, reflection)
         return redirect('/thanks')
     else:
         flash("Please don't leave fields blank.", 'error')
@@ -141,24 +156,21 @@ def view_tracker_thanks():
 @login_required
 def view_monthly_tracker():
     averages = get_averages(current_user.id)
-    # print(averages)
-    return render_template("monthly-averages.html", data=averages)  # this needs work - not sure why its not working
+    average_mood = averages['average_mood']
+    average_sleep = averages['average_sleep']
+    average_motivation = averages['average_motivation']
+    return render_template("monthly-averages.html", average_mood=average_mood, average_sleep=average_sleep, average_motivation=average_motivation)
 
 
 @app.get('/activity')
 @login_required
 def view_activity():
-    index = randint(0, len(mock_data) - 1)
-    value = mock_data[index]
-    return render_template("activity.html", data=value)
-
-
-@app.get('/quote')
-@login_required
-def view_quote():
-    integer = randint(0, 33)
-    quote_obj = data[integer]
-    return render_template("quotes.html", id=quote_obj["id"], author=quote_obj["person"], quote=quote_obj["quote"])
+    response = requests.get(f"http://localhost:{app.config['PORT']}/activity-api")
+    data = response.json()
+    activity = data['activity']
+    photo = photo_generator.get_random_picture()
+    print(photo)
+    return render_template("activity.html", activity=activity, photo=photo)
 
 
 @app.get("/scrapbook")
@@ -191,5 +203,22 @@ def submit_scrapbook_upload():
     return redirect('/scrapbook/upload')
 
 
+@app.post("/scrapbook/delete/<image_url>")
+@login_required
+def submit_scrapbook_deletion(image_url):
+    if image_url.split('-')[0] == str(current_user.id):  # If the image belongs to the current user
+        try:
+            remove(join(app.config['UPLOAD_FOLDER'], secure_filename(image_url)))
+        except FileNotFoundError:
+            pass
+        else:
+            remove_image(current_user.id, image_url)
+    return redirect('/scrapbook')
+
+
 if __name__ == '__main__':
-    app.run()
+    combined_app = Flask(__name__)
+    combined_app.wsgi_app = DispatcherMiddleware(app, {
+        '/activity-api': activity_api
+    })
+    combined_app.run(port=app.config['PORT'])

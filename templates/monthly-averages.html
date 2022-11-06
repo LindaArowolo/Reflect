@@ -1,11 +1,17 @@
 {% extends 'base.html' %}
-{% block title %}Quote{% endblock %}
+{% block title %}Reflect. My Month{% endblock %}
 {% block body %}
   <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
     <div class="card mx-auto text-center" style="width: 550px; max-width: 95%; background: #fffa;">
       <div class="card-body">
-        <h1 class="text-primary mb-4">{{ averages }}</h1>
-        <div class="text-center">
+        <h1 class="text-primary mb-4">Your Month</h1>
+        <h2 class="mt-4 mb-3 text-primary fw-normal">Mood: <span class="fw-bold">{{ average_mood or 'no data yet' }}</span></h2>
+        <input type="range" class="w-100 rounded-pill" min="0" max="5" step="0.1" value="{{ average_mood }}" disabled>
+        <h2 class="mt-4 mb-3 text-primary fw-normal">Sleep: <span class="fw-bold">{{ average_sleep or 'no data yet' }}</span></h2>
+        <input type="range" class="w-100 rounded-pill" min="0" max="5" step="0.1" value="{{ average_sleep }}" disabled>
+        <h2 class="mt-4 mb-3 text-primary fw-normal">Motivation: <span class="fw-bold">{{ average_motivation or 'no data yet' }}</span></h2>
+        <input type="range" class="w-100 rounded-pill" min="0" max="5" step="0.1" value="{{ average_motivation }}" disabled>
+        <div class="text-center mt-4">
           <a role="button" href="/" class="btn btn-danger w-100 mt-2">Back to home</a>
         </div>
       </div>

@@ -8,41 +8,41 @@
         <form method="post">
           <div class="mb-4">
             <p class="lead">How was your mood today?</p>
-            <input type="radio" class="btn-check" name="mood" id="mood-very-bad" value="1" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="mood" id="mood-very-bad" value="1" autocomplete="off" {{ 'checked' if existing_mood == 1 else '' }} required>
             <label class="btn btn-lg btn-outline-info" for="mood-very-bad" style="font-size: 3.5rem; border-width: 2px;"><i class="fa-solid fa-face-sad-tear"></i></label>
-            <input type="radio" class="btn-check" name="mood" id="mood-bad" value="2" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="mood" id="mood-bad" value="2" autocomplete="off" {{ 'checked' if existing_mood == 2 else '' }} required>
             <label class="btn btn-lg btn-outline-danger" for="mood-bad" style="font-size: 3.5rem; border-width: 2px;"><i class="fa-solid fa-face-frown"></i></label>
-            <input type="radio" class="btn-check" name="mood" id="mood-neutral" value="3" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="mood" id="mood-neutral" value="3" autocomplete="off" {{ 'checked' if existing_mood == 3 else '' }} required>
             <label class="btn btn-lg btn-outline-primary" for="mood-neutral" style="font-size: 3.5rem; border-width: 2px;"><i class="fa-solid fa-face-meh"></i></label>
-            <input type="radio" class="btn-check" name="mood" id="mood-good" value="4" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="mood" id="mood-good" value="4" autocomplete="off" {{ 'checked' if existing_mood == 4 else '' }} required>
             <label class="btn btn-lg btn-outline-secondary" for="mood-good" style="font-size: 3.5rem; border-width: 2px;"><i class="fa-solid fa-face-smile"></i></label>
-            <input type="radio" class="btn-check" name="mood" id="mood-very-good" value="5" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="mood" id="mood-very-good" value="5" autocomplete="off" {{ 'checked' if existing_mood == 5 else '' }} required>
             <label class="btn btn-lg btn-outline-success" for="mood-very-good" style="font-size: 3.5rem; border-width: 2px;"><i class="fa-solid fa-face-laugh"></i></label>
           </div>
           <div class="mb-4">
             <p class="lead">How was your sleep quality last night?</p>
-            <input type="radio" class="btn-check" name="sleep" id="sleep-very-bad" value="1" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="sleep" id="sleep-very-bad" value="1" autocomplete="off" {{ 'checked' if existing_sleep == 1 else '' }} required>
             <label class="btn btn-lg btn-outline-info" for="sleep-very-bad" style="font-size: 3.5rem; border-width: 2px;"><i class="fa-solid fa-face-sad-tear"></i></label>
-            <input type="radio" class="btn-check" name="sleep" id="sleep-bad" value="2" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="sleep" id="sleep-bad" value="2" autocomplete="off" {{ 'checked' if existing_sleep == 2 else '' }} required>
             <label class="btn btn-lg btn-outline-danger" for="sleep-bad" style="font-size: 3.5rem; border-width: 2px;"><i class="fa-solid fa-face-frown"></i></label>
-            <input type="radio" class="btn-check" name="sleep" id="sleep-neutral" value="3" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="sleep" id="sleep-neutral" value="3" autocomplete="off" {{ 'checked' if existing_sleep == 3 else '' }} required>
             <label class="btn btn-lg btn-outline-primary" for="sleep-neutral" style="font-size: 3.5rem; border-width: 2px;"><i class="fa-solid fa-face-meh"></i></label>
-            <input type="radio" class="btn-check" name="sleep" id="sleep-good" value="4" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="sleep" id="sleep-good" value="4" autocomplete="off" {{ 'checked' if existing_sleep == 4 else '' }} required>
             <label class="btn btn-lg btn-outline-secondary" for="sleep-good" style="font-size: 3.5rem; border-width: 2px;"><i class="fa-solid fa-face-smile"></i></label>
-            <input type="radio" class="btn-check" name="sleep" id="sleep-very-good" value="5" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="sleep" id="sleep-very-good" value="5" autocomplete="off" {{ 'checked' if existing_sleep == 5 else '' }} required>
             <label class="btn btn-lg btn-outline-success" for="sleep-very-good" style="font-size: 3.5rem; border-width: 2px;"><i class="fa-solid fa-face-laugh"></i></label>
           </div>
           <div class="mb-4">
             <p class="lead">How were your motivation levels today?</p>
-            <input type="radio" class="btn-check" name="motivation" id="motivation-very-bad" value="1" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="motivation" id="motivation-very-bad" value="1" autocomplete="off" {{ 'checked' if existing_motivation == 1 else '' }} required>
             <label class="btn btn-lg btn-outline-info" for="motivation-very-bad" style="font-size: 3.5rem; border-width: 2px;"><i class="fa-solid fa-face-sad-tear"></i></label>
-            <input type="radio" class="btn-check" name="motivation" id="motivation-bad" value="2" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="motivation" id="motivation-bad" value="2" autocomplete="off" {{ 'checked' if existing_motivation == 2 else '' }} required>
             <label class="btn btn-lg btn-outline-danger" for="motivation-bad" style="font-size: 3.5rem; border-width: 2px;"><i class="fa-solid fa-face-frown"></i></label>
-            <input type="radio" class="btn-check" name="motivation" id="motivation-neutral" value="3" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="motivation" id="motivation-neutral" value="3" autocomplete="off" {{ 'checked' if existing_motivation == 3 else '' }} required>
             <label class="btn btn-lg btn-outline-primary" for="motivation-neutral" style="font-size: 3.5rem; border-width: 2px;"><i class="fa-solid fa-face-meh"></i></label>
-            <input type="radio" class="btn-check" name="motivation" id="motivation-good" value="4" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="motivation" id="motivation-good" value="4" autocomplete="off" {{ 'checked' if existing_motivation == 4 else '' }} required>
             <label class="btn btn-lg btn-outline-secondary" for="motivation-good" style="font-size: 3.5rem; border-width: 2px;"><i class="fa-solid fa-face-smile"></i></label>
-            <input type="radio" class="btn-check" name="motivation" id="motivation-very-good" value="5" autocomplete="off" required>
+            <input type="radio" class="btn-check" name="motivation" id="motivation-very-good" value="5" autocomplete="off" {{ 'checked' if existing_motivation == 5 else '' }} required>
             <label class="btn btn-lg btn-outline-success" for="motivation-very-good" style="font-size: 3.5rem; border-width: 2px;"><i class="fa-solid fa-face-laugh"></i></label>
           </div>
           <div class="mb-4">
@@ -50,7 +50,7 @@
               Do you have any reflections on your day? <button type="button" id="inspire-me" class="btn btn-sm btn-primary ms-2">Inspire me</button><br>
               <small id="inspiration" class="text-muted" style="position: relative; top: -5px;"></small>
             </label>
-            <textarea class="form-control" name="reflection" id="reflection" rows="4" required></textarea>
+            <textarea class="form-control" name="reflection" id="reflection" rows="4" required>{{ existing_reflection }}</textarea>
           </div>
           <div class="text-center">
             <button type="submit" class="btn btn-lg btn-primary">Submit reflections</button>
