@@ -1,13 +1,17 @@
 import unittest
-from api.mock_activity_api import mock_activity_data
+import unittest.mock
+from api.mock_activity_api import create_activity_api
 
 
 class TestMockActivityApi(unittest.TestCase):
 
-    def test_activity(self):
-        mock_activity_api = mock_activity_data
-        self.assertIn("Go on a 3-5km walk, try listening to your favourite playlist whilst doing so.", mock_activity_api)
-        self.assertNotIn("Try running a marathon", mock_activity_api)
+    def test_get_activity(self):
+        activity = "Practice gratitude. Make a list of the things that you are grateful for."
+        with unittest.mock.patch("random.choice", return_value=activity):
+            mock_activity_api = create_activity_api()
+            with mock_activity_api.test_client() as client:
+                response = client.get('/')
+                self.assertEqual(response.json, {"activity": activity})
 
 
 if __name__ == '__main__':
